@@ -1,0 +1,44 @@
+services:
+  nginx: # container name
+    image: nginx # pull image from dockerHub
+    ports:
+      - 8000:80
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf #moute container file with local one, so we make config in nginx server directly throguh vscode
+    depends_on: #startup timing, frist below containers run then nginx run
+      - gateway1
+      - gateway2
+
+  gateway1:
+    build: ./gateway
+    env_file: ./gateway/.env
+    ports:
+      - 7001:8000
+    environment:
+      - SERVER_NAME=pehla gateway
+
+  gateway2:
+    build: ./gateway
+    env_file: ./gateway/.env
+    environment:
+      - SERVER_NAME=dusra gateway
+    ports:
+      - 7002:8000
+
+  auth-service:
+    build: ./services/auth # here you found dockerfile to build image&container
+    env_file: ./services/auth/.env
+    ports:
+      - 5001:8001
+
+  order-service:
+    build: ./services/order
+    env_file: ./services/order/.env
+    ports:
+      - 5002:8002
+
+  product-service:
+    build: ./services/product
+    env_file: ./services/product/.env
+    ports:
+      - 5003:8003

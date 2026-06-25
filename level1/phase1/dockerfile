@@ -1,0 +1,9 @@
+FROM node
+WORKDIR /app
+
+COPY package*.json .
+# COPY all files into curent directory /app
+COPY . .
+
+RUN npm install
+CMD [ "node", "index.js" ]

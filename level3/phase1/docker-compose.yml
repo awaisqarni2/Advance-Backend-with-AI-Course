@@ -1,0 +1,52 @@
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - 6379:6379
+
+  nginx:
+    image: nginx # here we have buil-in image
+    ports:
+      - 8000:80
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on: #wait for depends then nginx contianer start
+      - server1
+      - server2
+      - server3
+
+  server1:
+    build: ./server # here wehave custom-dockerfile to create container
+    env_file:
+      - ./server/.env
+    environment: # create env variable in run time
+      - SERVER_NAME="pehla server"
+      - REDIS_URL=redis://redis:6379
+    ports:
+      - 5001:7000
+    depends_on:
+      - redis
+
+  server2:
+    build: ./server # here wehave custom-dockerfile to create container
+    env_file:
+      - ./server/.env
+    environment:
+      - SERVER_NAME="dusra server"
+      - REDIS_URL=redis://redis:6379
+    ports:
+      - 5002:7000
+    depends_on:
+      - redis
+
+  server3:
+    build: ./server # here wehave custom-dockerfile to create container
+    env_file:
+      - ./server/.env
+    environment:
+      - SERVER_NAME="tesra server"
+      - REDIS_URL=redis://redis:6379
+    ports:
+      - 5003:7000
+    depends_on:
+      - redis
