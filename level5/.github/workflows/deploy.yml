@@ -1,0 +1,29 @@
+name: Deploy To EC2 #action name
+
+on: # event on
+  push:
+    branches:
+      - main
+
+jobs: # here defines jobs - what to do
+  deploy: # one job is deploy
+    runs-on: ubuntu-latest # create ubuntu machine
+
+    steps: # then define steps how & which sequence things done
+      - name: checkout code #step1 name
+        uses: actions/checkout@v6 #github action that check code
+
+      - name: Connect EC2 and Deploy #step2 name
+        uses: appleboy/ssh-action@v1
+
+        with:
+          host: ${{secrets.SSH_HOST}} # get secret from github secret
+          # repo - settings - secretsAndVariables - Actions - new repo secrets - give name & secret (elastic ip) & click on add secret.
+          username: ubuntu
+          key: ${{ secrets.SSH_KEY }} # cat level5pk.pem & copy all its content & paste it in SSH_KEY name github secret.
+
+          script: |
+            cd ~/level5
+            git pull
+            sudo docker compose down
+            sudo docker compose up --build -d
