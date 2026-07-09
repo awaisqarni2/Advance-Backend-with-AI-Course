@@ -1,5 +1,5 @@
 services:
-  level5:
+  aws-deployement:
     build: ./ # here wehave custom-dockerfile to create container
     ports:
       - 5000:5000

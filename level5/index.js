@@ -6,7 +6,13 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.get("/", (req, res) => {
-  res.status(200).json({ message: "Hello world" });
+  res.status(200).json({
+    message: "wellcome to zentraelurex, website is in development phase...",
+  });
+});
+
+app.get("/health", (req, res) => {
+  res.status(200).json({ message: "All is good" });
 });
 
 app.listen(PORT, () => {
